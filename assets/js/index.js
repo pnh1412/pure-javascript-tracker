@@ -75,8 +75,7 @@ function deleteIssue(issueId) {
   const clonedIssues = [...dataIssues];
   // const index = clonedIssues.findIndex(issue => issue.id === issueId);
   // clonedIssues.splice(index, 1);
-  const issuesFiltered = clonedIssues.filter(issue => issue.id !== issueId);
-  console.log('issuesFiltered: ', issuesFiltered)
+  const issuesFiltered = clonedIssues.filter(issue => issue.id !== Number(issueId));
 
   dataIssues = issuesFiltered;
   renderIssue(dataIssues)
