@@ -4,11 +4,10 @@ let dataIssues = [];
 // components
 const issuesList = document.getElementById("issuesList");
 const btnAdd = document.getElementById("btnAdd");
+const search = document.getElementById("search");
 
 // click remove => new data => renderIssue(newData)
 function renderIssue(dataSource = []) {
-  console.log('dataSource: ', dataSource)
-
   issuesList.innerHTML = '';
 
   dataSource.forEach(issue => {
@@ -67,6 +66,7 @@ btnAdd.addEventListener("click", () => {
   }
   
   dataIssues.push(issueItem);
+  console.log(dataIssues)
   renderIssue(dataIssues);
 });
 
@@ -80,3 +80,10 @@ function deleteIssue(issueId) {
   dataIssues = issuesFiltered;
   renderIssue(dataIssues)
 }
+
+// search issue
+search.addEventListener('keyup', e => {
+  const clonedTodo = [...dataIssues];
+  const filteredTodo = clonedTodo.filter(todo => todo.title.includes(e.target.value));
+  renderIssue(filteredTodo)
+})

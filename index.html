@@ -44,6 +44,38 @@
 
     </div>
 
+    <div class="w-full h-[1px] bg-gray-400 my-4"></div>
+
+    <div class="text-3xl mb-8">
+      List Todo
+    </div>
+
+    <div class="flex items-center">
+      <span class="w-[100px] shrink-0">Search:</span>
+      <input id="search" class="block w-[300px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+    </div>
+
+    <div class="flex items-center my-4">
+      <span class="w-[100px] shrink-0">Filter:</span>
+      <button id="btnAll" type="button" class="rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+        All
+      </button>
+      <button id="btnOpen" type="button" class="rounded-md bg-green-600 mx-4 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+        Open
+      </button>
+      <button id="BtnClose" type="button" class="rounded-md bg-[#da373d] px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+        Close
+      </button>
+    </div>
+
+    <div class="flex items-center">
+      <span class="w-[100px] shrink-0">Order By:</span>
+      <select id="orderBy" class="block appearance-none w-[300px] border border-gray-200 text-gray-700 mt-2 py-3 px-4 pr-8 rounded leading-tight">
+        <option value="desc">Desc</option>
+        <option value="asc">Asc</option>
+      </select>  
+    </div>
+
     <div id="issuesList" class="mt-4"></div>
 
   </div>
