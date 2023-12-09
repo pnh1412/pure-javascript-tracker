@@ -84,6 +84,6 @@ function deleteIssue(issueId) {
 // search issue
 search.addEventListener('keyup', e => {
   const clonedTodo = [...dataIssues];
-  const filteredTodo = clonedTodo.filter(todo => todo.title.includes(e.target.value));
+  const filteredTodo = clonedTodo.filter(todo => todo.title.toLowerCase().includes(e.target.value.toLowerCase()));
   renderIssue(filteredTodo)
 })
