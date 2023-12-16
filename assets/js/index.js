@@ -1,3 +1,6 @@
+// CONSTANTS
+const ISSUES = 'issues';
+
 // mock data
 let dataIssues = [];
 
@@ -5,6 +8,19 @@ let dataIssues = [];
 const issuesList = document.getElementById("issuesList");
 const btnAdd = document.getElementById("btnAdd");
 const search = document.getElementById("search");
+const orderBy = document.getElementById("orderBy");
+const btnAll = document.getElementById("btnAll");
+const btnOpen = document.getElementById("btnOpen");
+const btnClose = document.getElementById("btnClose");
+
+function getData() {
+  const data = window.localStorage.getItem(ISSUES);
+  const dataParsed = data ? JSON.parse(data) : [];
+  dataIssues = dataParsed;
+  renderIssue(dataIssues);
+}
+
+getData();
 
 // click remove => new data => renderIssue(newData)
 function renderIssue(dataSource = []) {
@@ -48,8 +64,8 @@ function renderIssue(dataSource = []) {
   }) 
 }
 
-// fetch data
-renderIssue(dataIssues);
+// // fetch data
+// renderIssue(dataIssues);
 
 // add new issue
 btnAdd.addEventListener("click", () => {
@@ -66,7 +82,6 @@ btnAdd.addEventListener("click", () => {
   }
   
   dataIssues.push(issueItem);
-  console.log(dataIssues)
   renderIssue(dataIssues);
 });
 
@@ -87,3 +102,57 @@ search.addEventListener('keyup', e => {
   const filteredTodo = clonedTodo.filter(todo => todo.title.toLowerCase().includes(e.target.value.toLowerCase()));
   renderIssue(filteredTodo)
 })
+
+
+function sortIssuesByTitle(value) {
+  const clonedIssues = [...dataIssues];
+
+  // Sắp xếp mảng theo title
+  clonedIssues.sort((a, b) => {
+    const titleA = a.title.toLowerCase();
+    const titleB = b.title.toLowerCase();
+
+    if (value === "asc") {
+      return titleA.localeCompare(titleB);
+    } else if (value === "desc") {
+      return titleB.localeCompare(titleA);
+    }
+
+    return 0;
+  });
+
+  // Render lại danh sách
+  renderIssue(clonedIssues);
+}
+
+
+orderBy.addEventListener("change", () => {
+  const value = orderBy.value;
+  sortIssuesByTitle(value);
+});
+
+function renderFilteredIssues(status) {
+  const clonedIssues = [...dataIssues];
+
+  // Lọc dữ liệu dựa trên trạng thái
+  const filteredIssues = status === "all"
+    ? clonedIssues
+    : clonedIssues.filter(issue => issue.status === status);
+
+  // Render lại danh sách
+  renderIssue(filteredIssues);
+}
+
+btnAll.addEventListener("click", () => {
+  renderFilteredIssues("all");
+});
+
+// Thêm event listener cho nút "Open"
+btnOpen.addEventListener("click", () => {
+  renderFilteredIssues("open");
+});
+
+// Thêm event listener cho nút "Close"
+btnClose.addEventListener("click", () => {
+  renderFilteredIssues("closed");
+});
