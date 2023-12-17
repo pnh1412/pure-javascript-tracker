@@ -13,14 +13,30 @@ const btnAll = document.getElementById("btnAll");
 const btnOpen = document.getElementById("btnOpen");
 const btnClose = document.getElementById("btnClose");
 
-function getData() {
+// call api fetch data
+fetch('https://jsonplaceholder.typicode.com/todos?_limit=5&_page=1', {
+  method: 'GET',
+  headers: {
+    'Content-Type': 'application/json'
+  }
+})
+.then(res => res.json())
+.then(data => {
+  getData(data);
+})
+
+
+function getData(dataSource) {
   const data = window.localStorage.getItem(ISSUES);
-  const dataParsed = data ? JSON.parse(data) : [];
-  dataIssues = dataParsed;
-  renderIssue(dataIssues);
+  if(data) {
+    dataIssues = JSON.parse(data);
+    renderIssue(dataIssues);
+  } else {
+    renderIssue(dataSource);
+  }
 }
 
-getData();
+
 
 // click remove => new data => renderIssue(newData)
 function renderIssue(dataSource = []) {
@@ -80,6 +96,7 @@ btnAdd.addEventListener("click", () => {
     author,
     status: "open",
   }
+
   
   dataIssues.push(issueItem);
   renderIssue(dataIssues);
