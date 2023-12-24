@@ -102,15 +102,14 @@ btnAdd.addEventListener("click", () => {
   const author = document.getElementById("author").value;
 
   const issueItem = {
-    data: [
+    data: 
       {
         id: Math.ceil(Math.random() * 1000),
         title,
         description,
-        author,
-        status: "open",
+        author: [author],
+        severity: "open",
       }
-    ]
   };
   
   fetch('https://tony-auth-express.vercel.app/api/todo', {

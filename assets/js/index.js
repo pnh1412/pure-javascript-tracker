@@ -13,18 +13,30 @@ const btnAll = document.getElementById("btnAll");
 const btnOpen = document.getElementById("btnOpen");
 const btnClose = document.getElementById("btnClose");
 
-// call api fetch data
-fetch('https://jsonplaceholder.typicode.com/todos?_limit=5&_page=1', {
-  method: 'GET',
-  headers: {
-    'Content-Type': 'application/json'
-  }
-})
-.then(res => res.json())
-.then(data => {
-  getData(data);
-})
+// call api fetch data  => promise 
+// fetch('https://jsonplaceholder.typicode.com/todos?_limit=5&_page=1', {
+//   method: 'GET',
+//   headers: {
+//     'Content-Type': 'application/json'
+//   }
+// })
+// .then(res => res.json())
+// .then(data => {
+//   getData(data);
+// })
 
+// call api fetch data  => async await
+async function initialFetchDatga() {
+  const res = await fetch('https://jsonplaceholder.typicode.com/todos?_limit=5&_page=1', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+  const data = await res.json();
+  getData(data);
+}
+initialFetchDatga();
 
 function getData(dataSource) {
   const data = window.localStorage.getItem(ISSUES);
@@ -35,8 +47,6 @@ function getData(dataSource) {
     renderIssue(dataSource);
   }
 }
-
-
 
 // click remove => new data => renderIssue(newData)
 function renderIssue(dataSource = []) {
@@ -84,18 +94,45 @@ function renderIssue(dataSource = []) {
 // renderIssue(dataIssues);
 
 // add new issue
-btnAdd.addEventListener("click", () => {
+btnAdd.addEventListener("click", async () => {
   const title = document.getElementById("title").value;
   const description = document.getElementById("description").value;
   const author = document.getElementById("author").value;
   
   const issueItem = {
-    id: Math.ceil(Math.random() * 1000),
-    title,
-    description,
-    author,
-    status: "open",
+    data:{
+      id: Math.ceil(Math.random() * 1000),
+      title,
+      description,
+      author,
+      severity: "open",
+    }
   }
+  const res = await fetch('https://tony-auth-express.vercel.app/api/todo', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(issueItem)
+  })
+  const data = await res.json();
+  const items = [...dataIssues, data.data]; // push item in array
+  dataIssues = items;
+  renderIssue(dataIssues);
+  
+  // fetch('https://tony-auth-express.vercel.app/api/todo', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json'
+  //       },
+  //       body: JSON.stringify(issueItem)
+  //     })
+  //     .then(res => res.json())
+  //     .then(data => {
+  //       const items = [...dataIssues, data.data]; // push item in array
+  //       dataIssues = items;
+  //       renderIssue(dataIssues)
+  //     })
 
   
   dataIssues.push(issueItem);
