@@ -1,32 +1,33 @@
-document.getElementById("btnAdd").addEventListener("click", function () {
-  const firstName = document.getElementById("first-name").value;
-  const lastName = document.getElementById("last-name").value;
-  const email = document.getElementById("email").value;
-  const role = document.getElementById("role").value;
-  const registrationDate = new Date().toLocaleDateString();
+document.addEventListener('DOMContentLoaded', function () {
+  const btnAdd = document.getElementById('btnAdd');
 
-  const userData = {
-    firstName,
-    lastName,
-    email,
-    role,
-    registrationDate,
-  };
+  btnAdd.addEventListener('click', function () {
+    const firstName = document.getElementById('first-name').value;
+    const lastName = document.getElementById('last-name').value;
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const user = {
+      data: {
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        role: 'operator',
+        password: password
+      }
+    };
 
-  fetch('https://tony-auth-express.vercel.app/api/user', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(userData),
-  })
-    .then(res => res.json())
-    .then(data => {
-      console.log('Success:', data);
-      alert('User registered successfully!');
+    fetch('https://tony-auth-express.vercel.app/api/user/signup', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(user)
     })
-    .catch((error) => {
-      console.error('Error:', error);
-      alert('Error registering user. Please try again.');
-    });
+      .then(data => {
+        console.log('User registered successfully:', data);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+  });
 });
