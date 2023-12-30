@@ -458,6 +458,9 @@ async function closeIssue(issueId) {
   const issueIndex = issuseStorage.findIndex(issue => issue._id === issueId);
   issuseStorage[issueIndex].status = 'closed';
 
+  // assign localstorage
+  window.localStorage.setItem(ISSUES, JSON.stringify(issuseStorage));
+
   dataIssues = issuseStorage;
   renderIssue(dataIssues);
 }
