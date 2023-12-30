@@ -285,16 +285,28 @@ const btnOpen = document.getElementById("btnOpen");
 const btnClose = document.getElementById("btnClose");
 
 // call api fetch data
-fetch('https://tony-auth-express.vercel.app/api/todo', {
-  method: 'GET',
-  headers: {
-    'Content-Type': 'application/json'
+
+function initialData() {
+  const access_token = window.sessionStorage.getItem('token');
+  if(!access_token) {
+    window.location.href = "./login.html";
+    return;
   }
-})
-  .then(res => res.json())
-  .then(data => {
-    getData(data);
+
+  fetch('https://tony-auth-express.vercel.app/api/todo', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    }
   })
+    .then(res => res.json())
+    .then(data => {
+      getData(data.data);
+    })
+}
+
+initialData();
+
 
 function getData(dataSource) {
   const data = window.localStorage.getItem(ISSUES);
@@ -302,8 +314,9 @@ function getData(dataSource) {
     dataIssues = JSON.parse(data);
     renderIssue(dataIssues);
   } else {
-    saveDataToLocalStorage(dataSource);
-    renderIssue(dataSource);
+    dataIssues = dataSource;
+    saveDataToLocalStorage(dataIssues);
+    renderIssue(dataIssues);
   }
 }
 
@@ -316,8 +329,8 @@ function renderIssue(dataSource = []) {
           <div class="font-bold text-xl mb-2 flex items-center bg-slate-400	">
             <div class="mr-2">${issue.title}</div>
             <span class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700">
-              ${issue.severity === "open" ? "Open" : "Closed"}
-            </span>
+              ${issue.status === "closed" ? "Closed" : "Open"}
+            </span> 
           </div>
           <p class="text-gray-700 text-base">
             ${issue.description}
@@ -418,23 +431,35 @@ function searchByDescription(description) {
   return searchResults;
 }
 
-function closeIssue(issueId) {
+async function closeIssue(issueId) {
   const clonedIssues = [...dataIssues];
-  const index = clonedIssues.findIndex((issue) => issue._id === issueId);
+  const issueItem = clonedIssues.find((issue) => issue._id === issueId);
 
-  if (index !== -1) {
-    clonedIssues[index].severity = "closed";
-    fetch(`https://tony-auth-express.vercel.app/api/todo/${issueId}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-    })
-      .then(() => {
-        dataIssues = clonedIssues;
-        renderIssue(dataIssues);
-      })
+  if(!issueItem) return;
+
+  const bodyData = {
+    data: {
+      ...issueItem,
+      status: 'closed'
+    }
   }
+
+  const response = await fetch(`https://tony-auth-express.vercel.app/api/todo/${issueId}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(bodyData)
+  })
+  const data = await response.json();
+  if(!data.isSucess) return;
+
+  const issuseStorage = JSON.parse(window.localStorage.getItem(ISSUES));
+  const issueIndex = issuseStorage.findIndex(issue => issue._id === issueId);
+  issuseStorage[issueIndex].status = 'closed';
+
+  dataIssues = issuseStorage;
+  renderIssue(dataIssues);
 }
 
 btnAll.addEventListener("click", () => {
